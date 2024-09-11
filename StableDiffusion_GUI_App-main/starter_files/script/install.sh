@@ -42,10 +42,10 @@ git --version
 
 # Clonage du dépôt GitHub
 echo "Clonage du dépôt GitHub..."
-git clone https://github.com/MariyaSha/StableDiffusion_GUI_App.git
+git clone https://github.com/sivani88/stable-diffusion.git
 
 # Accès au répertoire racine du projet
-cd StableDiffusion_GUI_App/starter_files
+cd stable-diffusion/StableDiffusion_GUI_App/starter_files
 
 sudo apt-get update && \
 sudo apt-get install git-lfs && \

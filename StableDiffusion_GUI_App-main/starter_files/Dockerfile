@@ -14,12 +14,21 @@ RUN apt-get update && apt-get install -y \
     tcl8.6-dev \
     tk8.6-dev \
     python3-tk \
+    libgl1-mesa-glx \          
+    libglib2.0-0 \             
+    libsm6 \                   
+    libxext6 \                
+    libxrender1 \       
     && rm -rf /var/lib/apt/lists/*
+
+ENV  PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONNUMBUFFERED=1    
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Create a non-privileged user that the app will run under.
+# Créer un utilisateur non-privilégié (optionnel mais conservé)
+ARG UID=1000
 RUN adduser \
     --disabled-password \
     --gecos "" \
@@ -29,18 +38,27 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
+# Télécharger les dépendances en tant qu'étape séparée pour tirer parti du cache Docker
+# Utiliser le cache pour /root/.cache/pip afin d'accélérer les builds ultérieurs
+# Utiliser un bind mount pour requirements.txt afin d'éviter de le copier dans cette couche
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    python -m pip install -r requirements.txt
+
+
+
 # Switch to the non-privileged user to run the application.
 USER root
 
 
 # Copier le fichier requirements.txt dans le répertoire de travail
-COPY starter_files/requirements.txt /app/
+COPY . .
 
 # Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier tous les fichiers de l'application dans le répertoire de travail
-COPY starter_files/ /app/
+
 
 # Exposer le port sur lequel l'application écoute
 EXPOSE 8000
