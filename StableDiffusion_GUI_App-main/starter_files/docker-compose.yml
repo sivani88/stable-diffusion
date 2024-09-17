@@ -8,3 +8,5 @@ services:
     volumes:
       - ./logs:/logs
       - ./:/app  # Monte le répertoire actuel dans /app dans le conteneur
+    environment:
+      - FLASK_ENV=development  
