@@ -1,23 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Stable Diffusion App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-    <img id="logo" src="/static/images/logo.png">
+    <img id="logo" src="{{ url_for('static', filename='images/logo.png') }}">
     <br>
     <form action="/prompt" method="post">
         <p>What kind of image would you like to generate?</p>
         <br>
-        <input id="prompt" type="text" name="prompt_input">
+        <input id="prompt" type="text" name="prompt_input" placeholder="Enter your prompt">
         <br>
         <input id="generate_btn" type="submit" value="GENERATE" onclick="processing();">
     </form>
+
     <br>
-    <img class="generated" src="{{ url_for('static', filename='images/demo_img0.png') }}">
-    <img class="generated" src="{{ url_for('static', filename='images/demo_img1.png') }}">
-    <img class="generated" src="{{ url_for('static', filename='images/demo_img2.png') }}">
     
+    <div class="generated-images">
+        {% if prompt_images %}
+            <!-- Display each generated image using a loop -->
+            {% for i in range(3) %}
+                <img class="generated" src="{{ url_for('static', filename='images/demo_img' + i + '.png') }}" alt="Generated Image {{ i + 1 }}">
+            {% endfor %}
+        {% else %}
+            <p>No images generated yet.</p>
+        {% endif %}
+    </div>
+
+    <form action="/supersample" method="post">
+        <br>
+        <!-- Generate save buttons using a loop -->
+        {% for i in range(3) %}
+            <button class="save_btn" name="save_btn" type="submit" value="{{ i }}" onclick="saving('{{ i }}');">SAVE HD IMAGE {{ i + 1 }}</button>
+        {% endfor %}
+    </form>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>            
+</body>
 </html>
