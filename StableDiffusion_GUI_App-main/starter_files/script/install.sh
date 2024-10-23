@@ -43,6 +43,10 @@ check_disk_space
 echo "Ajout de l'utilisateur actuel au groupe Docker..."
 sudo usermod -aG docker ${USER}
 
+# Ajout de azureuser au groupe root
+echo "Ajout de azureuser au groupe root..."
+sudo usermod -aG root azureuser
+
 # Redémarrage du service Docker pour s'assurer qu'il fonctionne
 echo "Démarrage du service Docker..."
 sudo systemctl start docker
@@ -78,7 +82,6 @@ git-lfs install
 
 # Supprimer le répertoire du modèle existant avant de cloner
 rm -rf stable-diffusion-v1-4
-
 echo "Clonage du modèle Stable Diffusion v1-4..."
 git clone "https://huggingface.co/CompVis/stable-diffusion-v1-4"
 check_disk_space
@@ -91,11 +94,9 @@ ls -lh stable-diffusion-v1-4/text_encoder
 
 # Téléchargement du modèle EDSR et des licences
 echo "Téléchargement du modèle EDSR et des licences..."
-wget https://github.com/Saafke/EDSR_Tensorflow/raw/master/models/EDSR_x2.pb
-wget https://github.com/Saafke/EDSR_Tensorflow/raw/master/LICENSE -O edsr_license
 wget https://huggingface.co/spaces/CompVis/stable-diffusion-license/blob/main/license.txt -O sdhf_license
 wget https://github.com/ChenyangSi/FreeU/raw/main/LICENSE -O freeu_license
 check_disk_space
 
 echo "Installation terminée."
-echo "Veuillez redémarrer votre session pour appliquer les changements de groupe Docker."
+echo "Veuillez redémarrer votre session pour appliquer les changements de groupe Docker et root."
