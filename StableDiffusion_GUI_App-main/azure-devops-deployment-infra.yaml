@@ -1,0 +1,52 @@
+trigger:
+  - main
+
+pool:
+  name: "azure-pipelines"
+
+variables:
+  rg: "sivani-tfstae-azuredevops-webapp-01"
+  storage_account: "sasivanitfstate"
+  container: "tfstate"
+  tfstate_file: "terraform.tfstate"
+  subscription_id: "votre-id-dabonnement"
+  backend_service_connection: "votre-connexion-de-service"
+  location: northeurope
+
+stages:
+  - stage: Deploy
+    jobs:
+      - job: DeployInfrastructure
+        steps:
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: "latest"
+
+          - task: TerraformCLI@0
+            inputs:
+              command: "init"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              backendType: "azurerm"
+              backendServiceArm: "$(backend_service_connection)"
+              ensureBackend: true
+              backendAzureRmResourceGroupName: "$(rg)"
+              backendAzureRmStorageAccountName: "$(storage_account)"
+              backendAzureRmContainerName: "$(container)"
+              backendAzureRmKey: "$(tfstate_file)"
+
+          - task: TerraformCLI@0
+            inputs:
+              command: "validate"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+
+          - task: TerraformCLI@0
+            inputs:
+              command: "plan"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              environmentServiceName: "$(backend_service_connection)"
+
+          - task: TerraformCLI@0
+            inputs:
+              command: "apply"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              environmentServiceName: "$(backend_service_connection)"

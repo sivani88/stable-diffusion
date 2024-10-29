@@ -57,4 +57,4 @@ USER root
 EXPOSE 8000
 
 # Commande pour démarrer l'application
-CMD ["python3", "m", "unittest", "discover", "-s", "tests"]
+CMD ["python3", "app.py"]
