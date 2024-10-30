@@ -6,4 +6,5 @@ transformers==4.26.0
 accelerate==0.16.0
 opencensus-ext-azure==1.1.7
 opencensus-ext-flask==0.8.2
+werkzeug==2.0.3
 # Ajoutez ici toutes les autres dépendances nécessaires à votre application
