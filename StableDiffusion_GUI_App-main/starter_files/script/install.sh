@@ -19,6 +19,9 @@ check_disk_space
 # Installation de Git
 echo "Installation de Git..."
 sudo apt-get install -y git
+sudo apt-get update
+sudo apt-get install -y gnupg
+
 check_disk_space
 
 # Ajout de la clé GPG officielle de Docker
