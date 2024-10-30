@@ -14,4 +14,4 @@ services:
       - FLASK_ENV=development
       - PYTHONPATH=/app
       - PYTHON_VERSION=$(pythonVersion)
-    command: $(testCommand)
+    command: "python3 -m flask run --host=0.0.0.0 --port=8000"
