@@ -6,8 +6,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ./:/app
       - ./logs:/logs
-      - ./:/app  # Monte le répertoire actuel dans /app dans le conteneur
       - ./static:/app/static
+      - /home/azureuser/stable-diffusion/StableDiffusion_GUI_App-main/starter_files/models/stable-diffusion-v1-4:/app/stable-diffusion-v1-4
     environment:
       - FLASK_ENV=development
+      - PYTHONPATH=/app
+      - PYTHON_VERSION=$(pythonVersion)
+    command: $(testCommand)
