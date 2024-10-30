@@ -1,7 +1,6 @@
-# Utiliser une image de base Python
 FROM python:3.11.5-slim
 
-# Installer les dépendances système requises pour certaines bibliothèques Python et Pillow
+# Installation des dépendances système
 RUN apt-get update && apt-get install -y \
     gcc \
     libjpeg-dev \
@@ -19,42 +18,26 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxext6 \
     libxrender1 \
-    nano \
     && rm -rf /var/lib/apt/lists/*
 
-# Définir les variables d'environnement pour éviter l'écriture des fichiers pyc et activer le buffer Python
+# Variables d'environnement
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=development
 
-# Définir le répertoire de travail dans le conteneur
+# Répertoire de travail
 WORKDIR /app
 
-# Créer un utilisateur non-privilégié (optionnel mais conservé)
-ARG UID=1000
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
-# Copier le fichier requirements.txt et installer les dépendances en tant qu'étape séparée
+# Installation des dépendances Python
 COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Utiliser le cache pour /root/.cache/pip afin d'accélérer les builds ultérieurs
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements.txt
-
-# Copier tous les fichiers du répertoire courant dans le répertoire de travail
+# Copie du code
 COPY . .
 
-# Changer l'utilisateur pour root si nécessaire (vous pouvez ajuster selon vos besoins)
-USER root
-
-# Exposer le port sur lequel l'application écoute
+# Exposition du port
 EXPOSE 8000
 
-# Commande pour démarrer l'application
-CMD ["python3", "m", "unittest", "discover", "-s", "tests"]
+# Commande de démarrage
+CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]
