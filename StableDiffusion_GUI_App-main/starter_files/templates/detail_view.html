@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stable Diffusion App - Image Detail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <img id="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+    <br>
+    <p>Detailed view of your generated image</p>
+    <br>
+    <div class="generated-images">
+        <img class="generated" style="width: 750px;" src="{{ image_path }}" alt="Generated Image Detail">
+    </div>
+    <br>
+    <div class="button-group">
+        <a href="{{ url_for('hello') }}">
+            <button class="save_btn" type="button">BACK TO GALLERY</button>
+        </a>
+        <a href="{{ image_path }}" download>
+            <button class="save_btn" type="button">DOWNLOAD IMAGE</button>
+        </a>
+    </div>
+    <br>
+    <div class="image-info" style="color: #666;">
+        <p>File name: {{ image_path.split('/')[-1] }}</p>
+        <p>Path: {{ image_path }}</p>
+    </div>
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
