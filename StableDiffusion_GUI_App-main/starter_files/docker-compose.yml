@@ -9,6 +9,7 @@ services:
       - ./:/app
       - ./logs:/logs
       - ./static:/app/static
+      - ./static/images:/app/static/images
       - ./static/images/saved:/app/static/images/saved
       - /home/azureuser/stable-diffusion/StableDiffusion_GUI_App-main/starter_files/models/stable-diffusion-v1-4:/app/stable-diffusion-v1-4
     environment:
