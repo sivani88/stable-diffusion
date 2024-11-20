@@ -23,11 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt \
+    && pip install \
     Pillow>=10.0.1 \
     Flask>=2.3.3 \
     werkzeug>=3.0.1 \
@@ -40,9 +39,6 @@ RUN pip install --no-cache-dir -r requirements.txt \
     opencensus-ext-flask>=0.8.3
 
 COPY . .
-RUN chown -R appuser:appuser /app
-
-USER appuser
 
 EXPOSE 8000
 
