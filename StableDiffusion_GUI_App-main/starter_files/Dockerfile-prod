@@ -1,8 +1,7 @@
 FROM python:3.11.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
@@ -25,18 +24,7 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements.txt \
-    && pip install \
-    Pillow>=10.0.1 \
-    Flask>=2.3.3 \
-    werkzeug>=3.0.1 \
-    torch>=2.2.0 \
-    transformers>=4.37.2 \
-    accelerate>=0.27.0 \
-    diffusers>=0.25.0 \
-    huggingface_hub>=0.20.3 \
-    opencensus-ext-azure>=1.1.13 \
-    opencensus-ext-flask>=0.8.3
+    pip install -r requirements.txt
 
 COPY . .
 
