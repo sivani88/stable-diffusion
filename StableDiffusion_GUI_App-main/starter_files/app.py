@@ -35,7 +35,7 @@ else:
     print("Application Insights n'a pas pu être configuré.")
 
 # Load the Stable Diffusion pipeline
-pipeline = StableDiffusionPipeline.from_pretrained("/opt/stable-diffusion/stable-diffusion-v1-4")
+pipeline = StableDiffusionPipeline.from_pretrained("/app/models/stable-diffusion/stable-diffusion-v1-4")
 
 @app.route('/')
 def hello():
