@@ -68,7 +68,7 @@ docker-compose --version
 git --version
 
 # Supprimer le dépôt existant avant de cloner
-rm -rf stable-diffusion
+
 
 # Clonage du dépôt GitHub
 echo "Clonage du dépôt GitHub..."
