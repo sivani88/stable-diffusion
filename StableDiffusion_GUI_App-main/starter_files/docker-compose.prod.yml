@@ -1,4 +1,4 @@
-
+version: "3.9"
 
 services:
   web:
@@ -6,16 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile-prod
     ports:
-      - "8000:8000"
+      - "8000:8000" # Expose le port de l'application Flask
     volumes:
-      - .:/app
-      - ./logs:/logs
-      - ./static:/app/static
-      - ./static/images:/app/static/images
-      - ./static/images/saved:/app/static/images/saved
-      - /opt/stable-diffusion/stable-diffusion-v1-4:/app/stable-diffusion-v1-4  # Montage depuis la VM
+      - .:/app # Montage du répertoire local pour synchroniser les fichiers du projet
+      - ./logs:/logs # Montage des logs
+      - ./static:/app/static # Dossier static
+      - ./static/images:/app/static/images # Images générées
+      - ./static/images/saved:/app/static/images/saved # Images sauvegardées
+      - /opt/stable-diffusion/stable-diffusion-v1-4:/app/models/stable-diffusion-v1-4:ro # Modèle en lecture seule
     environment:
       FLASK_ENV: development
       PYTHONPATH: /app
-      
     command: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]

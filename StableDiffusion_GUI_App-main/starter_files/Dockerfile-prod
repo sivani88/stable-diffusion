@@ -1,3 +1,4 @@
+# Utilise une image de base Python Slim
 FROM python:3.11.10-slim
 
 # Configuration de l'environnement Python
@@ -22,32 +23,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Définir le répertoire de travail
+# Définit le répertoire de travail
 WORKDIR /app
 
-# Copie des fichiers de dépendances Python
+# Copie les fichiers de dépendances Python
 COPY requirements.txt .
+
+# Installe les dépendances Python
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
-# Copie de tous les fichiers du projet dans l'image
+# Copie les fichiers de l'application
 COPY . .
-
-# Copie des fichiers du modèle Stable Diffusion
-# Assurez-vous que le chemin /home/azureuser/stable-diffusion/... est correct
-COPY /home/azureuser/stable-diffusion/StableDiffusion_GUI_App-main/starter_files/models/stable-diffusion-v1-4 /app/models/stable-diffusion-v1-4
-
-# Copie des autres dossiers nécessaires
-COPY ./logs /logs
-COPY ./static /app/static
-COPY ./static/images /app/static/images
-COPY ./static/images/saved /app/static/images/saved
 
 # Expose le port pour Flask
 EXPOSE 8000
 
-# L'utilisateur root est nécessaire pour certaines permissions
+# Définit l'utilisateur par défaut pour exécuter l'application
 USER root
 
-# Commande par défaut pour démarrer Flask
+# Commande par défaut pour démarrer l'application Flask
 CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]
