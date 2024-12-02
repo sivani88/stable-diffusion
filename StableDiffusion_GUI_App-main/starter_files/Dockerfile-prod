@@ -1,27 +1,28 @@
-# Utilise une image de base Python Slim
-FROM python:3.11.10-slim
+# Utilise une image de base Python Slim avec des mises à jour de sécurité
+FROM python:3.11.10-slim-bullseye
 
 # Configuration de l'environnement Python
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
-# Installation des dépendances système
+# Installation des dépendances système avec des mises à jour de sécurité
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libjpeg62-turbo-dev \
+    zlib1g \
     zlib1g-dev \
     libfreetype6-dev \
     liblcms2-dev \
     libopenjp2-7-dev \
     libwebp-dev \
     python3-tk \
-    libgl1-mesa-glx \
     libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender1 \
+    libgl1-mesa-glx \
+    && apt-get upgrade -y \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+
 
 # Définit le répertoire de travail
 WORKDIR /app
@@ -29,18 +30,18 @@ WORKDIR /app
 # Copie les fichiers de dépendances Python
 COPY requirements.txt .
 
-# Installe les dépendances Python
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-cache-dir -r requirements.txt
+# Installe les dépendances Python avec des précautions de sécurité
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir \
+    # Mise à jour de setuptools pour corriger GHSA-cx63-2mw6-8hw5
+    setuptools>=70.0.0 \
+    -r requirements.txt
 
 # Copie les fichiers de l'application
 COPY . .
 
 # Expose le port pour Flask
 EXPOSE 8000
-
-# Définit l'utilisateur par défaut pour exécuter l'application
-USER root
 
 # Commande par défaut pour démarrer l'application Flask
 CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]

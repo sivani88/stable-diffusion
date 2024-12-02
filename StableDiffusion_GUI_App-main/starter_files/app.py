@@ -37,6 +37,14 @@ else:
 # Load the Stable Diffusion pipeline
 pipeline = StableDiffusionPipeline.from_pretrained("/opt/stable-diffusion/stable-diffusion-v1-4")
 
+try:
+    pipeline = StableDiffusionPipeline.from_pretrained("/opt/stable-diffusion/stable-diffusion-v1-4")
+    print("Pipeline Stable Diffusion chargé avec succès.")
+except Exception as e:
+    print(f"Erreur lors du chargement du pipeline : {e}")
+    pipeline = None
+
+
 @app.route('/')
 def hello():
     return render_template(

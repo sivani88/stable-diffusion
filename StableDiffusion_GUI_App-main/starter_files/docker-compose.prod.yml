@@ -13,7 +13,8 @@ services:
       - ./static:/app/static # Dossier static
       - ./static/images:/app/static/images # Images générées
       - ./static/images/saved:/app/static/images/saved # Images sauvegardées
-      - /opt/stable-diffusion/stable-diffusion-v1-4:/app/models/stable-diffusion-v1-4:ro # Modèle en lecture seule
+      - /opt/stable-diffusion/stable-diffusion-v1-4:/opt/stable-diffusion/stable-diffusion-v1-4:ro
+
     environment:
       FLASK_ENV: development
       PYTHONPATH: /app
